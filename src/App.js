@@ -1,26 +1,56 @@
 import React from 'react';
-import logo from './logo.svg';
 import './App.css';
+import * as ds from './DataSet'
+import Task from './Task'
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+class App extends React.Component {
+
+    constructor(props) {
+        super(props)
+        this.state = {
+            isLoading: true,
+            dset: ds.DataSet
+        }
+        this.handleClick = this.handleClick.bind(this)
+    }
+
+    componentDidMount() {
+        setTimeout(()=>{
+            this.setState(
+                {
+                    isLoading:false
+                }
+            )
+        },2000)
+
+    }
+
+    handleClick(id) {
+
+        this.setState((prevSate) => {
+            const newState = prevSate.dset.map(item => {
+                if (item.id === id)
+                    item.checked = !item.checked
+                return item
+            })
+            return newState
+        })
+    }
+
+    render() {
+
+        let dset = this.state.dset.map(item => <Task key={item.id} item={item} handleClick={this.handleClick}/>)
+
+        return (
+
+             this.state.isLoading ? <p>is loading</p> :
+            <div>
+                {
+                    dset
+                }
+            </div>
+        )
+    }
 }
 
 export default App;
